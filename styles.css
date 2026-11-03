@@ -153,8 +153,8 @@
 .hero-animation{mask-image:radial-gradient(ellipse 72% 76% at 50% 51%,#000 34%,rgba(0,0,0,.76) 48%,rgba(0,0,0,.2) 59%,transparent 67%)}
 @media(max-width:650px){.hero-table{left:7%;width:86%;height:74%;mask-image:radial-gradient(ellipse 78% 76% at 50% 51%,#000 38%,rgba(0,0,0,.75) 52%,rgba(0,0,0,.18) 63%,transparent 70%)}.hero-animation{mask-image:radial-gradient(ellipse 78% 76% at 50% 51%,#000 38%,rgba(0,0,0,.75) 52%,rgba(0,0,0,.18) 63%,transparent 70%)}}
 
-/* Fallback para navegadores móveis que não aplicam o filtro SVG ao vídeo. */
-@media(max-width:650px){.hero-animation{filter:none;mix-blend-mode:screen}}
+/* Mantém o hambúrguer com a mesma cor no celular e no desktop. */
+@media(max-width:650px){.hero-animation{-webkit-filter:url(#remove-video-black);filter:url(#remove-video-black);mix-blend-mode:normal}}
 
 .review-rate-link{display:block;width:max-content;margin-top:9px}
 .hero-side-controls .hero-slide-arrow{width:42px;height:42px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--yellow);font-size:31px}
