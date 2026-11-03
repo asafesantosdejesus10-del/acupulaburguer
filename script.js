@@ -114,6 +114,19 @@ if (visitVideo) {
 const heroAnimation = document.querySelector('.hero-animation');
 const keyedHeroCanvas = document.querySelector('.hero-animation-keyed');
 const keyedHeroContext = keyedHeroCanvas?.getContext('2d', { willReadFrequently: true });
+const heroBurgerShadow = document.querySelector('.hero-burger-shadow');
+function updateHeroBurgerShadow() {
+  if (!heroAnimation || !heroBurgerShadow) return;
+  if (!window.matchMedia('(max-width: 650px)').matches) {
+    heroBurgerShadow.style.opacity = '0';
+    return;
+  }
+  const duration = Number.isFinite(heroAnimation.duration) ? heroAnimation.duration : 0;
+  const fadeDuration = duration ? Math.min(1.35, Math.max(0.7, duration * 0.18)) : 1;
+  const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
+  const easedProgress = progress * progress * (3 - 2 * progress);
+  heroBurgerShadow.style.opacity = String(0.76 * (1 - easedProgress));
+}
 let keyedHeroFrameRequest = 0;
 function renderKeyedHeroFrame() {
   keyedHeroFrameRequest = 0;
@@ -154,7 +167,14 @@ if (heroAnimation) {
   heroAnimation.addEventListener('play', scheduleKeyedHeroFrame);
   heroAnimation.addEventListener('timeupdate', scheduleKeyedHeroFrame);
   heroAnimation.addEventListener('pause', scheduleKeyedHeroFrame);
-  window.addEventListener('resize', scheduleKeyedHeroFrame);
+  heroAnimation.addEventListener('play', updateHeroBurgerShadow);
+  heroAnimation.addEventListener('timeupdate', updateHeroBurgerShadow);
+  heroAnimation.addEventListener('loadedmetadata', updateHeroBurgerShadow);
+  heroAnimation.addEventListener('seeked', updateHeroBurgerShadow);
+  window.addEventListener('resize', () => {
+    scheduleKeyedHeroFrame();
+    updateHeroBurgerShadow();
+  });
   heroAnimation.addEventListener('timeupdate', () => {
     if (Number.isFinite(heroAnimation.duration) && heroAnimation.duration - heroAnimation.currentTime < 0.6) {
       heroAnimation.classList.add('is-restarting');
@@ -173,6 +193,7 @@ if (heroAnimation) {
     });
   });
   scheduleKeyedHeroFrame();
+  updateHeroBurgerShadow();
 }
 
 const heroBackgroundVideo = document.querySelector('.hero-background-video');
