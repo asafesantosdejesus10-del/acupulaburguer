@@ -207,7 +207,20 @@ if (aboutSection && aboutTrack && aboutCanvas) {
     const sourceY = Math.floor(tile / sheetColumns) * frameHeight;
     const width = aboutCanvas.width || frameWidth;
     const height = aboutCanvas.height || frameHeight;
-    aboutContext.drawImage(image, sourceX, sourceY, frameWidth, frameHeight, 0, 0, width, height);
+    const targetRatio = width / height;
+    const frameRatio = frameWidth / frameHeight;
+    let cropX = sourceX;
+    let cropY = sourceY;
+    let cropWidth = frameWidth;
+    let cropHeight = frameHeight;
+    if (frameRatio > targetRatio) {
+      cropWidth = frameHeight * targetRatio;
+      cropX += (frameWidth - cropWidth) / 2;
+    } else {
+      cropHeight = frameWidth / targetRatio;
+      cropY += (frameHeight - cropHeight) / 2;
+    }
+    aboutContext.drawImage(image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
     loadSpriteSheet(sheetNumber + 1);
   }
 

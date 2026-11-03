@@ -122,11 +122,10 @@
 .about-scroll-track{position:relative;height:280vh}
 .about-section{position:sticky;top:88px;height:calc(100vh - 88px);min-height:0;overflow:hidden;scroll-margin-top:88px}
 #about-scroll-canvas{width:100%;height:100%;object-fit:cover}
-.about-photo{align-self:center;justify-self:center;width:min(100%,calc((100vh - 88px)*.75));height:auto;aspect-ratio:3/4;min-height:0}
+.about-photo{align-self:stretch;justify-self:stretch;width:100%;height:100%;aspect-ratio:auto;min-height:0;margin:0}
 .about-photo #about-scroll-canvas{display:block;width:100%;height:100%;object-fit:contain}
 @media(max-width:900px){.about-section{top:76px;height:calc(100vh - 76px);scroll-margin-top:76px}}
-@media(max-width:900px){.about-photo{width:min(100%,calc((100vh - 76px)*.75))}}
-@media(max-width:650px){.about-scroll-track{height:300svh}.about-section{top:68px;height:calc(100svh - 68px);grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;overflow:hidden;scroll-margin-top:68px}.about-photo{align-self:center;justify-self:center;width:min(100%,37svh);height:auto;max-height:100%;aspect-ratio:3/4;margin:0}.about-copy{padding:clamp(12px,2svh,20px) 7%;}.about-copy h2{font-size:clamp(36px,8vw,48px);line-height:.86;margin:8px 0}.about-copy>p:not(.eyebrow){font-size:10px;line-height:1.45;margin-bottom:12px}.about-copy .button{min-height:42px}}
+@media(max-width:650px){.about-scroll-track{height:300svh}.about-section{top:68px;height:calc(100svh - 68px);grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;overflow:hidden;scroll-margin-top:68px}.about-photo{align-self:stretch;justify-self:stretch;width:100%;height:100%;max-height:none;aspect-ratio:auto;margin:0}.about-copy{padding:clamp(12px,2svh,20px) 7%;}.about-copy h2{font-size:clamp(36px,8vw,48px);line-height:.86;margin:8px 0}.about-copy>p:not(.eyebrow){font-size:10px;line-height:1.45;margin-bottom:12px}.about-copy .button{min-height:42px}}
 
 /* Os slides compartilham a mesma caixa e preservam a altura do hero original. */
 .hero.reviews-active{height:auto;min-height:590px;padding:88px 8.1% 70px;display:grid;grid-template-columns:47% 53%;align-items:center}
