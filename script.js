@@ -169,8 +169,9 @@ if (heroSection && heroSlideButtons.length && reviewSlide) {
 }
 
 const aboutSection = document.querySelector('#sobre');
+const aboutTrack = document.querySelector('#sobre-track');
 const aboutCanvas = document.querySelector('#about-scroll-canvas');
-if (aboutSection && aboutCanvas) {
+if (aboutSection && aboutTrack && aboutCanvas) {
   const aboutContext = aboutCanvas.getContext('2d', { alpha: false });
   const totalFrames = 190;
   const framesPerSheet = 20;
@@ -211,9 +212,10 @@ if (aboutSection && aboutCanvas) {
   }
 
   function updateAboutFrame() {
-    const bounds = aboutSection.getBoundingClientRect();
-    const travel = window.innerHeight + bounds.height;
-    const progress = Math.max(0, Math.min(1, (window.innerHeight - bounds.top) / travel));
+    const trackTop = aboutTrack.getBoundingClientRect().top;
+    const headerHeight = document.querySelector('.site-header')?.offsetHeight || 0;
+    const scrollDistance = Math.max(1, aboutTrack.offsetHeight - aboutSection.offsetHeight);
+    const progress = Math.max(0, Math.min(1, (headerHeight - trackTop) / scrollDistance));
     aboutFrame = Math.round(progress * (totalFrames - 1));
     drawAboutFrame();
   }
