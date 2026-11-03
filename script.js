@@ -118,11 +118,13 @@ const heroBurgerShadow = document.querySelector('.hero-burger-shadow');
 function updateHeroBurgerShadow() {
   if (!heroAnimation || !heroBurgerShadow) return;
   const duration = Number.isFinite(heroAnimation.duration) ? heroAnimation.duration : 0;
-  const fadeDuration = duration ? Math.min(7.2, Math.max(5, duration * 0.65)) : 5.5;
+  const isMobile = window.matchMedia('(max-width: 650px)').matches;
+  const fadeDuration = duration
+    ? (isMobile ? Math.min(9, Math.max(7, duration * 0.78)) : Math.min(4.8, Math.max(3.2, duration * 0.45)) )
+    : (isMobile ? 7.5 : 3.6);
   const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
   const easedProgress = progress * progress * (3 - 2 * progress);
-  const maxOpacity = window.matchMedia('(max-width: 650px)').matches ? 0.96 : 0.98;
-  heroBurgerShadow.style.opacity = String(maxOpacity * (1 - easedProgress));
+  heroBurgerShadow.style.opacity = String(0.98 * (1 - easedProgress));
 }
 let keyedHeroFrameRequest = 0;
 function renderKeyedHeroFrame() {
