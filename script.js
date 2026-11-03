@@ -122,10 +122,10 @@ function updateHeroBurgerShadow() {
     return;
   }
   const duration = Number.isFinite(heroAnimation.duration) ? heroAnimation.duration : 0;
-  const fadeDuration = duration ? Math.min(1.35, Math.max(0.7, duration * 0.18)) : 1;
+  const fadeDuration = duration ? Math.min(3.2, Math.max(2, duration * 0.3)) : 2.4;
   const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
   const easedProgress = progress * progress * (3 - 2 * progress);
-  heroBurgerShadow.style.opacity = String(0.76 * (1 - easedProgress));
+  heroBurgerShadow.style.opacity = String(0.98 * (1 - easedProgress));
 }
 let keyedHeroFrameRequest = 0;
 function renderKeyedHeroFrame() {
