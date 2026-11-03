@@ -118,10 +118,10 @@ const heroBurgerShadow = document.querySelector('.hero-burger-shadow');
 function updateHeroBurgerShadow() {
   if (!heroAnimation || !heroBurgerShadow) return;
   const duration = Number.isFinite(heroAnimation.duration) ? heroAnimation.duration : 0;
-  const fadeDuration = duration ? Math.min(4.8, Math.max(3.2, duration * 0.45)) : 3.6;
+  const fadeDuration = duration ? Math.min(7.2, Math.max(5, duration * 0.65)) : 5.5;
   const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
   const easedProgress = progress * progress * (3 - 2 * progress);
-  const maxOpacity = window.matchMedia('(max-width: 650px)').matches ? 0.64 : 0.98;
+  const maxOpacity = window.matchMedia('(max-width: 650px)').matches ? 0.96 : 0.98;
   heroBurgerShadow.style.opacity = String(maxOpacity * (1 - easedProgress));
 }
 let keyedHeroFrameRequest = 0;
@@ -148,9 +148,16 @@ function renderKeyedHeroFrame() {
     const frame = keyedHeroContext.getImageData(0, 0, width, height);
     const pixels = frame.data;
     for (let index = 0; index < pixels.length; index += 4) {
-      const brightness = Math.max(pixels[index], pixels[index + 1], pixels[index + 2]);
-      const key = Math.max(0, Math.min(1, (brightness - 24) / 40));
-      const opacity = key * key * (3 - 2 * key);
+      const red = pixels[index];
+      const green = pixels[index + 1];
+      const blue = pixels[index + 2];
+      const brightness = Math.max(red, green, blue);
+      const chroma = brightness - Math.min(red, green, blue);
+      const neutralKey = Math.max(0, Math.min(1, (brightness - 38) / 48));
+      const colorKey = Math.max(0, Math.min(1, (chroma - 8) / 28));
+      const neutralOpacity = neutralKey * neutralKey * (3 - 2 * neutralKey);
+      const colorOpacity = colorKey * colorKey * (3 - 2 * colorKey);
+      const opacity = Math.max(neutralOpacity, colorOpacity);
       pixels[index + 3] = Math.round(pixels[index + 3] * opacity);
     }
     keyedHeroContext.putImageData(frame, 0, 0);
