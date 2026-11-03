@@ -70,7 +70,7 @@ function renderProducts(category) {
   grid.innerHTML = products[category].map((item, index) => `
     <article class="product-card ${category === 'bebidas' ? 'beverage-card' : ''}">
       <div class="product-image"><img loading="lazy" src="${photoUrl(item.image, item)}" alt="${item.name}" onerror="this.src='assets/cardapio-burgues.png'"><span class="product-number">${String(index + 1).padStart(2, '0')}</span></div>
-      <div class="product-info"><h3>${item.name}</h3><p>${item.note}</p><div class="product-bottom"><div class="product-price">${item.price}${item.smash ? `<br><small>${item.smash}</small>` : ''}</div><a class="product-order" href="${orderUrl}" target="_blank" rel="noopener noreferrer" aria-label="Pedir ${item.name} pelo iFood">+</a></div></div>
+      <div class="product-info"><h3>${item.name}</h3><p>${item.note}</p><div class="product-bottom"><div class="product-price">${item.price}${item.smash ? `<br><small>${item.smash}</small>` : ''}</div><a class="product-order" href="${orderUrl}" target="_blank" rel="noopener noreferrer" aria-label="Pedir ${item.name} pelo iFood"><svg class="product-order-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a></div></div>
     </article>`).join('');
 }
 
@@ -112,10 +112,53 @@ if (visitVideo) {
 }
 
 const heroAnimation = document.querySelector('.hero-animation');
+const keyedHeroCanvas = document.querySelector('.hero-animation-keyed');
+const keyedHeroContext = keyedHeroCanvas?.getContext('2d', { willReadFrequently: true });
+let keyedHeroFrameRequest = 0;
+function renderKeyedHeroFrame() {
+  keyedHeroFrameRequest = 0;
+  if (!heroAnimation || !keyedHeroCanvas || !keyedHeroContext || !window.matchMedia('(max-width: 650px)').matches) return;
+  if (heroAnimation.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && heroAnimation.videoWidth && heroAnimation.videoHeight) {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.25);
+    const width = Math.max(1, Math.round(keyedHeroCanvas.clientWidth * pixelRatio));
+    const height = Math.max(1, Math.round(keyedHeroCanvas.clientHeight * pixelRatio));
+    if (keyedHeroCanvas.width !== width || keyedHeroCanvas.height !== height) {
+      keyedHeroCanvas.width = width;
+      keyedHeroCanvas.height = height;
+    }
+    keyedHeroContext.clearRect(0, 0, width, height);
+    const videoRatio = heroAnimation.videoWidth / heroAnimation.videoHeight;
+    const canvasRatio = width / height;
+    let drawWidth = width;
+    let drawHeight = height;
+    if (videoRatio < canvasRatio) drawWidth = height * videoRatio;
+    else drawHeight = width / videoRatio;
+    keyedHeroContext.drawImage(heroAnimation, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+
+    const frame = keyedHeroContext.getImageData(0, 0, width, height);
+    const pixels = frame.data;
+    for (let index = 0; index < pixels.length; index += 4) {
+      const brightness = Math.max(pixels[index], pixels[index + 1], pixels[index + 2]);
+      const opacity = Math.max(0, Math.min(1, (brightness - 14) / 34));
+      pixels[index + 3] = Math.round(pixels[index + 3] * opacity);
+    }
+    keyedHeroContext.putImageData(frame, 0, 0);
+  }
+  if (!heroAnimation.paused && !heroAnimation.ended) keyedHeroFrameRequest = requestAnimationFrame(renderKeyedHeroFrame);
+}
+function scheduleKeyedHeroFrame() {
+  if (keyedHeroFrameRequest || !window.matchMedia('(max-width: 650px)').matches) return;
+  keyedHeroFrameRequest = requestAnimationFrame(renderKeyedHeroFrame);
+}
 if (heroAnimation) {
+  heroAnimation.addEventListener('play', scheduleKeyedHeroFrame);
+  heroAnimation.addEventListener('timeupdate', scheduleKeyedHeroFrame);
+  heroAnimation.addEventListener('pause', scheduleKeyedHeroFrame);
+  window.addEventListener('resize', scheduleKeyedHeroFrame);
   heroAnimation.addEventListener('timeupdate', () => {
     if (Number.isFinite(heroAnimation.duration) && heroAnimation.duration - heroAnimation.currentTime < 0.6) {
       heroAnimation.classList.add('is-restarting');
+      keyedHeroCanvas?.classList.add('is-restarting');
     }
   });
   heroAnimation.addEventListener('ended', () => {
@@ -123,8 +166,13 @@ if (heroAnimation) {
     heroAnimation.play().catch(() => {});
   });
   heroAnimation.addEventListener('seeked', () => {
-    requestAnimationFrame(() => heroAnimation.classList.remove('is-restarting'));
+    requestAnimationFrame(() => {
+      heroAnimation.classList.remove('is-restarting');
+      keyedHeroCanvas?.classList.remove('is-restarting');
+      scheduleKeyedHeroFrame();
+    });
   });
+  scheduleKeyedHeroFrame();
 }
 
 const heroBackgroundVideo = document.querySelector('.hero-background-video');

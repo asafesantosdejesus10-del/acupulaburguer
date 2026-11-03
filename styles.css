@@ -153,13 +153,27 @@
 .hero-animation{mask-image:radial-gradient(ellipse 72% 76% at 50% 51%,#000 34%,rgba(0,0,0,.76) 48%,rgba(0,0,0,.2) 59%,transparent 67%)}
 @media(max-width:650px){.hero-table{left:7%;width:86%;height:74%;mask-image:radial-gradient(ellipse 78% 76% at 50% 51%,#000 38%,rgba(0,0,0,.75) 52%,rgba(0,0,0,.18) 63%,transparent 70%)}.hero-animation{mask-image:radial-gradient(ellipse 78% 76% at 50% 51%,#000 38%,rgba(0,0,0,.75) 52%,rgba(0,0,0,.18) 63%,transparent 70%)}}
 
-/* Remove o halo escuro do vídeo no celular sem apagar as cores do hambúrguer. */
-@media(max-width:650px){.hero-animation{-webkit-filter:url(#remove-video-black);filter:url(#remove-video-black);mix-blend-mode:lighten}}
+/* Chroma key em canvas no celular: remove pixels pretos mantendo os tons originais. */
+.hero-animation-keyed{display:none;position:absolute;z-index:2;left:50%;top:48%;width:min(88%,820px);height:120%;transform:translate(-50%,-50%);pointer-events:none;opacity:1;transition:opacity .6s ease}
+.hero-animation-keyed.is-restarting{opacity:0}
+@media(max-width:650px){.hero-animation{opacity:0;filter:none;mix-blend-mode:normal}.hero-animation-keyed{display:block;width:120%;height:120%;top:48%}}
 
 .review-rate-link{display:block;width:max-content;margin-top:9px}
 .hero-side-controls .hero-slide-arrow{width:42px;height:42px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--yellow);font-size:31px}
 .hero-side-controls .hero-slide-arrow:hover{border:0;background:transparent;color:#fff;transform:scale(1.12)}
 @media(max-width:650px){.review-rate-link{margin:7px auto 0}.hero-side-controls .hero-slide-arrow{width:36px;height:36px;font-size:29px}}
+
+/* Ícones vetoriais consistentes para ações, navegação e pedidos do cardápio. */
+.ui-icon{display:inline-block;width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+.button .ui-icon{width:17px;height:17px}
+.hero-side-controls .hero-slide-arrow .ui-icon{width:25px;height:25px}
+.benefit-icon{display:inline-flex;align-items:center;justify-content:center}
+.benefit-icon .ui-icon{width:27px;height:27px}
+.benefit-link{display:inline-flex;align-items:center;gap:10px}
+.text-link{display:inline-flex;align-items:center;gap:8px}
+.map-open{display:inline-flex;align-items:center;gap:5px}
+.footer-order{display:inline-flex;align-items:center;gap:10px}
+.product-order-icon{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 
 /* Vídeo de fundo compartilhado pelos dois slides do hero. */
 .hero-background-video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.42) saturate(.92);opacity:1;pointer-events:none;transition:opacity .75s ease}
