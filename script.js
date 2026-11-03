@@ -117,12 +117,8 @@ const keyedHeroContext = keyedHeroCanvas?.getContext('2d', { willReadFrequently:
 const heroBurgerShadow = document.querySelector('.hero-burger-shadow');
 function updateHeroBurgerShadow() {
   if (!heroAnimation || !heroBurgerShadow) return;
-  if (!window.matchMedia('(max-width: 650px)').matches) {
-    heroBurgerShadow.style.opacity = '0';
-    return;
-  }
   const duration = Number.isFinite(heroAnimation.duration) ? heroAnimation.duration : 0;
-  const fadeDuration = duration ? Math.min(3.2, Math.max(2, duration * 0.3)) : 2.4;
+  const fadeDuration = duration ? Math.min(4.8, Math.max(3.2, duration * 0.45)) : 3.6;
   const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
   const easedProgress = progress * progress * (3 - 2 * progress);
   heroBurgerShadow.style.opacity = String(0.98 * (1 - easedProgress));
