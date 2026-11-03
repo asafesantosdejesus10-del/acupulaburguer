@@ -121,7 +121,8 @@ function updateHeroBurgerShadow() {
   const fadeDuration = duration ? Math.min(4.8, Math.max(3.2, duration * 0.45)) : 3.6;
   const progress = Math.max(0, Math.min(1, (heroAnimation.currentTime - 0.04) / fadeDuration));
   const easedProgress = progress * progress * (3 - 2 * progress);
-  heroBurgerShadow.style.opacity = String(0.98 * (1 - easedProgress));
+  const maxOpacity = window.matchMedia('(max-width: 650px)').matches ? 0.64 : 0.98;
+  heroBurgerShadow.style.opacity = String(maxOpacity * (1 - easedProgress));
 }
 let keyedHeroFrameRequest = 0;
 function renderKeyedHeroFrame() {
@@ -148,7 +149,8 @@ function renderKeyedHeroFrame() {
     const pixels = frame.data;
     for (let index = 0; index < pixels.length; index += 4) {
       const brightness = Math.max(pixels[index], pixels[index + 1], pixels[index + 2]);
-      const opacity = Math.max(0, Math.min(1, (brightness - 14) / 34));
+      const key = Math.max(0, Math.min(1, (brightness - 24) / 40));
+      const opacity = key * key * (3 - 2 * key);
       pixels[index + 3] = Math.round(pixels[index + 3] * opacity);
     }
     keyedHeroContext.putImageData(frame, 0, 0);
